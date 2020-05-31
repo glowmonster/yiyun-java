@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+    <!-- 使用依赖注入等配置信息,启动配置信息的注解模式 -->
+    <context:annotation-config></context:annotation-config>
+    <!-- 加载注解配置 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!-- 静态资源放行,忽略html,js.css,image等 -->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <!-- 全局扫描service包,写了扫描指定的包注解才能进入配置 -->
+    <context:component-scan base-package="top.glowmonster.service" />
+    <context:component-scan base-package="top.glowmonster.controller, top.glowmonster.base.controller, top.glowmonster.base.aop"></context:component-scan>
+    <!--自定义消息转换器的编码,解决后台传输json回前台时，中文乱码问题-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <bean class="top.glowmonster.base.config.SwaggerConfig"></bean>
+    <!-- 防止spring拦截swagger接口 -->
+    <mvc:resources mapping="/swagger/**" location="/swagger/" />
+    <!-- aop注解aspectj -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设定默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!-- 设定文件上传的最大值为5MB，5*1024*1024 -->
+        <property name="maxUploadSize" value="52428800"></property>
+        <!-- 设定文件上传时写入内存的最大值，如果小于这个参数不会生成临时文件，默认为10240 -->
+        <property name="maxInMemorySize" value="40960"></property>
+        <!-- 上传文件的临时路径 -->
+        <property name="uploadTempDir" value="fileUpload/tempFile"></property>
+        <!-- 延迟文件解析 -->
+        <property name="resolveLazily" value="true"/>
+    </bean>
+</beans>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.SongDao">
+    <insert id="insertSong" parameterType="Song">
+        insert
+        into t_songs(song_name, song_author, song_image, song_url,
+        song_great, style_id, song_version, is_deleted, song_create_time, song_update_time)
+        values (#{song_name}, #{song_author}, #{song_image},
+         #{song_url}, #{song_great}, #{style_id},
+         #{song_version}, #{is_deleted}, #{song_create_time}, #{song_update_time})
+    </insert>
+
+    <!-- 根据歌名和作者查询歌曲 -->
+    <select id="selectAllSongByNameOrAuthor" parameterType="map" resultType="Song">
+        select * from t_songs where is_deleted = 0
+        <choose>
+            <when test="song_name != null">
+                and song_name = concat("%", #{song_name}, "%")
+                <if test="song_author != null">
+                    or song_author like concat("%", #{song_author}, "%")
+                </if>
+            </when>
+            <otherwise>
+                <if test="song_author != null">
+                  and song_author like concat("%", #{song_author}, "%")
+                </if>
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <update id="deleteSongById" parameterType="map">
+        update t_songs set is_deleted = 1 where song_id = #{song_id}
+    </update>
+
+    <update id="updateSong" parameterType="map">
+        update t_songs set song_name = #{song_name}, song_author = #{song_author}, song_update_time = #{song_update_time}
+        where song_id = #{song_id}
+    </update>
+
+    <!-- 不分页查询所有歌曲 -->
+    <select id="selectAllSong" parameterType="map" resultType="Song">
+        select * from t_songs where is_deleted = 0
+        <if test="song_ids != null">
+            and song_id in
+            <foreach collection="song_ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 查询song_ids以外的歌曲 -->
+    <select id="selectOtherAllSong" parameterType="map" resultType="Song">
+        select * from t_songs where is_deleted = 0
+        <if test="song_ids != null">
+            and song_id not in
+            <foreach collection="song_ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="songGreat" parameterType="map">
+        update t_songs set song_great = song_great + 1 where song_id = #{song_id}
+    </update>
+
+</mapper>

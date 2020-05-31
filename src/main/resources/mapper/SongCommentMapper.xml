@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.SongCommentDao">
+    <insert id="insertSongComment" parameterType="SongComment">
+        insert into t_song_comments (song_id, comment_text, comment_create_time,
+        comment_update_time, comment_version, is_deleted)
+        values (#{song_id}, #{comment_text}, #{comment_create_time},
+        #{comment_update_time}, #{comment_version}, #{is_deleted})
+    </insert>
+
+    <select id="selectAllSongComment" parameterType="map" resultType="SongComment">
+        select * from t_song_comments where song_id = #{song_id}
+    </select>
+</mapper>

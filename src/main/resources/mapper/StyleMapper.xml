@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.StyleDao">
+    <insert id="insertStyle" parameterType="Style">
+        insert into
+        t_song_style(style_name, style_version, is_deleted, style_create_time, style_update_time)
+        values(#{style_name}, #{style_version}, #{is_deleted}, #{style_create_time}, #{style_update_time})
+    </insert>
+
+    <select id="selectAllStyleByName" parameterType="map" resultType="Style">
+        select * from t_song_style where is_deleted = 0
+        <if test="style_name != null">
+            and style_name like concat("%", #{style_name}, "%")
+        </if>
+    </select>
+
+    <update id="deleteStyle" parameterType="map">
+        update t_song_style set is_deleted = 1 where style_id in
+        <foreach collection="style_ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateStyle" parameterType="Style">
+        update t_song_style
+        set style_name = #{style_name}, style_version = #{style_version} + 1, style_update_time = #{style_update_time}
+        where style_id = #{style_id} and style_version = #{style_version}
+    </update>
+
+    <select id="selectAllStyle" resultType="Style">
+        select * from t_song_style where is_deleted = 0
+    </select>
+
+</mapper>

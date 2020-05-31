@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.UserDao">
+    <select id="selectUserByAccountAndPassword" parameterType="map" resultType="User">
+        select * from t_user
+        where user_account = #{account}
+        and user_password = #{password}
+        and is_deleted = 0
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        insert into t_user (user_account, user_avatar_url, user_name, user_password,
+        user_describes, user_version, is_deleted, user_create_time, user_update_time,
+        user_type)
+        values (#{user_account}, #{user_avatar_url}, #{user_name}, #{user_password},
+        #{user_describes}, #{user_version},
+        #{is_deleted}, #{user_create_time}, #{user_update_time},
+        #{user_type})
+    </insert>
+
+    <update id="updateUser" parameterType="map">
+        update t_user set user_name = #{user_name}, user_describes = #{user_describes}
+        where user_id = #{user_id}
+    </update>
+</mapper>

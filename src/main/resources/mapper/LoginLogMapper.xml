@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.LoginLogDao">
+    <insert id="insertLoginLog" parameterType="LoginLog">
+        insert into t_login_log (user_account, login_time, state, request_ip, is_deleted)
+        values (#{user_account}, #{login_time}, #{state}, #{request_ip}, #{is_deleted})
+    </insert>
+
+    <select id="selectAllLoginLogByUserAccount" resultType="LoginLog" parameterType="map">
+        select * from t_login_log where is_deleted = 0
+        <if test="user_account != null">
+            and user_account like concat("%", #{user_account}, "%")
+        </if>
+    </select>
+</mapper>

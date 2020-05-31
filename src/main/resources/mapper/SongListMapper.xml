@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.glowmonster.dao.SongListDao">
+    <insert id="addSongList" parameterType="SongList">
+        insert into t_song_list(list_name, song_ids, list_image, list_create_time,
+        list_update_time, list_version, is_deleted)
+        values (#{list_name}, #{song_ids}, #{list_image},
+        #{list_create_time}, #{list_update_time},
+        #{list_version}, #{is_deleted})
+    </insert>
+
+    <select id="selectSongList" parameterType="map" resultType="SongList">
+        select * from t_song_list where is_deleted = 0
+        <if test="list_name != null">
+            and list_name like concat("%", #{list_name}, "%")
+        </if>
+    </select>
+
+    <update id="updateSongList" parameterType="map">
+        update t_song_list set list_name = #{list_name}, list_update_time = #{list_update_time},
+        list_version = #{list_version} + 1
+        where list_id = #{list_id} and list_version = #{list_version}
+    </update>
+
+    <update id="updateSong_ids">
+        update t_song_list set song_ids = #{song_ids} where list_id = #{list_id}
+    </update>
+
+    <update id="deleteSongList" parameterType="map">
+        update t_song_list set is_deleted = 1 where list_id = #{list_id}
+    </update>
+</mapper>
