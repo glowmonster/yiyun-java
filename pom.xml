@@ -12,7 +12,7 @@
         <!-- oss版本号 -->
         <oss.version>3.8.0</oss.version>
         <!-- spring版本号 -->
-        <spring.version>4.0.2.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <!-- servlet-api版本号 -->
         <servlet.version>3.1.0</servlet.version>
         <!-- swagger版本号 -->
